@@ -8,12 +8,12 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "baseUrl": ".",
+    "baseUrl": "src",
     "strictNullChecks": true,
-    "alwaysStrict": true
-    // "paths": {
-    //   "*": ["node_modules/*"]
-    // }
+    "alwaysStrict": true,
+    "paths": {
+      "@/*": ["*"]
+    }
   },
   "include": ["src/**/*"]
 }

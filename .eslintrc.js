@@ -15,6 +15,8 @@ module.exports = {
     project: "./tsconfig.json"
   },
   rules: {
-    "no-console": "off"
+    "no-console": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/explicit-function-return-type": "off"
   }
 };
