@@ -9,7 +9,8 @@
     "dev": "tsc && nodemon api/index.ts",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "vercel-build": "echo hello"
   },
   "author": "Maria bracho",
   "license": "MIT",
