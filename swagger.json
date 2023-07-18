@@ -9,8 +9,8 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:3000",
-  "basePath": "/",
+  "host": "express-back-alpha.vercel.app",
+  "basePath": "/api/v1/",
   "tags": [
     {
       "name": "Users",
