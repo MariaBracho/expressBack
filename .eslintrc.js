@@ -5,11 +5,11 @@ module.exports = {
     node: true,
     jest: true
   },
-  parser: "@typescript-eslint/parser",
   extends: ["standard-with-typescript", "prettier"],
   overrides: [],
   parserOptions: {
     ecmaVersion: "latest",
+    parser: "@typescript-eslint/parser",
     sourceType: "module",
     tsconfigRootDir: __dirname,
     project: "./tsconfig.json"
@@ -17,6 +17,7 @@ module.exports = {
   rules: {
     "no-console": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-misused-promises": "off"
   }
 };

@@ -7,13 +7,23 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": "src",
+    "rootDir": "api",
+    "baseUrl": "api",
     "strictNullChecks": true,
     "alwaysStrict": true,
     "paths": {
       "@/*": ["*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": [
+    "api/**/*",
+    "api/routes",
+    "api/schemas",
+    "api/routesDoc",
+    "api/services",
+    "api/utils",
+    "api/types",
+    "api/index.ts",
+    ".eslintrc.js"
+  ]
 }
