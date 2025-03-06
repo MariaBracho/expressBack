@@ -22,7 +22,7 @@ const options = {
         description: "Development server"
       },
       {
-        url: "https://express-back-alpha.vercel.app/api/v1",
+        url: "https://express-back-git-main-mariabracho.vercel.app/api/v1",
         description: "Production server"
       }
     ]

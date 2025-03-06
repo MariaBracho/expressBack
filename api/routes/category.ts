@@ -1,54 +1,49 @@
 import { Router } from 'express';
-import ProductService from '../services/product';
-import {
-  deleteProductSchema,
-  getProductsSchema,
-  createProductSchema,
-  updateProductSchema,
-  getQueryProductsSchema,
-} from '../schemas/products';
 import validationHandler from '../middlewares/validator.handler';
+import CategoryService from '../services/category.service';
+import {
+  createCategorySchema,
+  deleteCategorySchema,
+  getCategorySchema,
+  updateCategorySchema,
+} from '../schemas/category';
 
 const router = Router();
-const service = new ProductService();
-// get all products
+const service = new CategoryService();
+// get all categorys
 // first params static then dynamic
 
 // Si te preguntas cuántas funciones middleware puedes enviar como callback, la respuesta es: las que quieras. Esto siempre y cuando las separes con coma. Las puedes llamar si las definiste fuera, ejecutar o incluso llamar un array de funciones middlewares.
 
 router.get(
   '/:id',
-  validationHandler(getProductsSchema, 'params'),
+  validationHandler(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
 
-      const product = await service.find(Number(id));
-      res.status(200).json(product);
+      const category = await service.find(Number(id));
+      res.status(200).json(category);
     } catch (error) {
       next(error);
     }
   }
 );
 
-router.get(
-  '/',
-  validationHandler(getQueryProductsSchema, 'query'),
-  async (req, res) => {
-    const productsList = await service.getAll(req.query);
-    res.status(200).json(productsList);
-  }
-);
+router.get('/', async (req, res) => {
+  const categoryList = await service.getAll();
+  res.status(200).json(categoryList);
+});
 
-// create product
+// create category
 router.post(
   '/',
-  validationHandler(createProductSchema, 'body'),
+  validationHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
       const { body } = req;
       res.status(201).json({
-        message: 'Product created successfully',
+        message: 'category created successfully',
         data: await service.create(body),
       });
     } catch (error) {
@@ -57,19 +52,19 @@ router.post(
   }
 );
 
-// edit product
+// edit category
 router.patch(
   '/:id',
-  validationHandler(getProductsSchema, 'params'),
-  validationHandler(updateProductSchema, 'body'),
+  validationHandler(getCategorySchema, 'params'),
+  validationHandler(updateCategorySchema, 'body'),
   async (req, res) => {
     try {
       const { id } = req.params;
       const { body } = req;
-      const product = await service.update(Number(id), body);
+      const category = await service.update(Number(id), body);
       res.json({
-        message: 'Product updated successfully',
-        data: product,
+        message: 'category updated successfully',
+        data: category,
         id,
       });
     } catch (error: any) {
@@ -80,16 +75,16 @@ router.patch(
   }
 );
 
-// delete product
+// delete category
 router.delete(
   '/:id',
-  validationHandler(deleteProductSchema, 'params'),
+  validationHandler(deleteCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
       const message = await service.delete(Number(id));
       res.json({
-        message: 'Product deleted successfully',
+        message: 'category deleted successfully',
         data: message,
       });
     } catch (error) {

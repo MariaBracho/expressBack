@@ -1,15 +1,15 @@
-import express from "express";
-import routerApi from "./routes";
+import express from 'express';
+import routerApi from './routes';
 import {
   logErrors,
   errorHandler,
-  boomHandler
-} from "./middlewares/error.handler";
-import { serve, setup } from "swagger-ui-express";
-import options from "./utils/swaggerOptions";
-import cors from "cors";
+  boomHandler,
+} from './middlewares/error.handler';
+import { serve, setup } from 'swagger-ui-express';
+import options from './utils/swaggerOptions';
+import cors from 'cors';
 
-import swaggerJsdoc from "swagger-jsdoc";
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -30,7 +30,7 @@ app.use(errorHandler);
 
 const specs = swaggerJsdoc(options);
 
-app.use("/api-docs", serve, setup(specs, { explorer: true }));
+app.use('/api-docs', serve, setup(specs, { explorer: true }));
 
 // listen port
 app.listen(PORT, () => {

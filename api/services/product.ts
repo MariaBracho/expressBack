@@ -1,87 +1,92 @@
-import { faker } from "@faker-js/faker";
-import { notFound, conflict } from "@hapi/boom";
-import type { Product } from "../types/products";
+import { notFound, conflict } from '@hapi/boom';
+import type { Product } from '../types/products';
+import { Op } from 'sequelize';
+
+import sequelize from './../libs/sequelize';
 
 class ProductService {
   product: Product[] = [];
 
   constructor() {
     this.product = [];
-    this.generater();
   }
 
-  generater() {
-    const arr = Array.from({ length: 100 }).fill(0);
+  async getAll(query: any) {
+    const options: {
+      limit?: number;
+      offset?: number;
+      include: string[];
+      price?: number;
+      price_max?: number;
+      price_min?: number;
+      where: Record<string, any>;
+    } = {
+      include: ['category'],
+      where: {},
+    };
 
-    const productsList = arr?.map((item) => {
-      return {
-        id: faker.helpers.unique(faker.datatype.uuid),
-        name: faker.commerce.productName(),
-        price: faker.commerce.price(),
-        image: faker.image.imageUrl(),
-        isBlocked: faker.datatype.boolean()
+    if (query.limit && query.offset) {
+      options.limit = query.limit;
+      options.offset = query.offset;
+    }
+
+    if (query.price) {
+      options.where.price = query.price;
+    }
+
+    if (query.price_min && !query.price_max) {
+      options.where.price = {
+        [Op.gte]: query.price_min,
       };
-    });
+    }
 
-    this.product.push(...productsList);
+    if (query.price_max && query.price_min) {
+      options.where.price = {
+        [Op.gte]: query.price_min,
+        [Op.lte]: query.price_max,
+      };
+    }
+
+    const result = await sequelize.models.Product.findAll(options);
+
+    return result;
   }
 
-  async getAll() {
-    return await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.product);
-      }, 4000);
-    });
-  }
-
-  async find(id: string) {
-    const product = this.product.find((item) => item.id === id);
-
+  async find(id: number) {
+    const product: any = await sequelize.models.Product.findByPk(id);
     if (!product) {
-      throw notFound("Product not found");
+      throw notFound('Product not found');
     }
-    if (product.isBlocked) {
-      throw conflict("Product is blocked");
+    if (product.isblocked) {
+      throw conflict('Product is blocked');
     }
     return product;
   }
 
-  async create(body: Product) {
-    const { name, price, image, isBlocked } = body;
-    const product = {
-      id: faker.helpers.unique(faker.datatype.uuid),
-      name,
-      price,
-      image: image || faker.image.imageUrl(),
-      isBlocked
-    };
-    this.product.push(product);
-
+  async create(body: any) {
+    const product = await sequelize.models.Product.create(body);
     return product;
   }
 
-  async update(id: string, body: Product) {
-    const index = this.product.findIndex((item) => item.id === id);
-    const product = this.product[index];
-    if (index === -1) {
-      throw new Error("Product not found");
-    }
-    this.product[index] = {
-      ...product,
-      ...body
-    };
+  async update(id: number, body: Product) {
+    const product = await this.find(id);
+    const result = await product.update(body, {
+      where: {
+        id,
+      },
+    });
 
-    return this.product[index];
+    return result;
   }
 
-  async delete(id: string) {
-    const isFind = this.product.findIndex((item) => item.id === id);
-
-    if (isFind === -1) {
-      throw notFound("Producto no encontrado");
-    }
-    this.product.splice(isFind, 1);
-    return id;
+  async delete(id: number) {
+    const product = await this.find(id);
+    await product.destroy({
+      where: {
+        id,
+      },
+    });
+    return product;
   }
 }
 

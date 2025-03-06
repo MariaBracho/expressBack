@@ -1,7 +1,9 @@
 export interface Product {
-  id?: string;
+  id?: number;
   name: string;
   price: string;
   image: string;
-  isBlocked: boolean;
+  isblocked: boolean;
+  createdAt?: Date;
+  categoryId: number;
 }

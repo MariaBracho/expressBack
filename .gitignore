@@ -142,6 +142,7 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+.build
 
 # Gatsby files
 .cache/
@@ -216,3 +217,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,node,macos
+
+postgres_data

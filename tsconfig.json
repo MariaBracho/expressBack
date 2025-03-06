@@ -2,13 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "ES2022",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "api",
-    "baseUrl": "api",
+    "baseUrl": "./",
     "strictNullChecks": true,
     "alwaysStrict": true,
     "paths": {
@@ -16,14 +16,13 @@
     }
   },
   "include": [
-    "api/**/*",
-    "api/routes",
-    "api/schemas",
-    "api/routesDoc",
-    "api/services",
-    "api/utils",
-    "api/types",
-    "api/index.ts",
-    ".eslintrc.js"
+    "api/**/*.ts",
+    "api/**/*.js",
+    ".eslintrc.js",
+    "api/db/config.ts",
+    "api/db/models/users.model.ts",
+    "api/db/models/products.model.ts",
+    "api/db/config.js",
+    "build",
   ]
 }
