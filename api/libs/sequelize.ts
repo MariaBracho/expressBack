@@ -1,6 +1,6 @@
 import { Sequelize, Options as SequelizeOptions } from 'sequelize';
-import config from '@/config/config';
 import { setupModels } from '@/db/models/index';
+import config from '@/config/config';
 
 const { isProd, dbEngine, dbUrl, developmentUri } = config;
 

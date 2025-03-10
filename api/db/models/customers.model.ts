@@ -1,5 +1,5 @@
 import { Model, DataTypes, type Sequelize, type ModelStatic } from 'sequelize';
-import { USER_TABLE } from '@/db/models/users.model';
+import { USER_TABLE } from '../models/users.model';
 
 const CUSTOMER_TABLE = 'customers';
 

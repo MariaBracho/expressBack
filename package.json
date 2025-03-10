@@ -66,15 +66,14 @@
     "yup": "^1.6.1"
   },
   "nodemonConfig": {
-    "ignore":
-      [
-        "**/*.spec.ts",
-        ".git",
-        "node_modules"
-      ],
+    "ignore": [
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
     "watch": [
-        "api"
-            ],
+      "api"
+    ],
     "exec": "node -r tsconfig-paths/register -r ts-node/register api/index.ts",
     "ext": "ts, js"
   }

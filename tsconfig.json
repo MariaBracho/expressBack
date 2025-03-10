@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "esModuleInterop": true,
-    "target": "ES2022",
+    "target":"ES2021",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
@@ -23,6 +23,5 @@
   "exclude": [
     "node_modules",
     "dist",
-
   ]
 }

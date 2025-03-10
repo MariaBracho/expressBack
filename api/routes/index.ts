@@ -17,15 +17,16 @@ export default function routerApi(app: core.Express) {
   // hello
   app.use('/', hello);
 
+  // Swagger
+  app.use('/api-docs', serve, setup(specs, { explorer: true }));
+
   // api/v1
   app.use('/api/v1', router);
+
   router.use('/', hello);
   router.use('/products', productsRouter);
   router.use('/users', usersRouter);
   router.use('/customer', customerRouter);
   router.use('/category', categoryRouter);
   router.use('/order', orderRouter);
-
-  // Swagger
-  app.use('/api-docs', serve, setup(specs, { explorer: true }));
 }
