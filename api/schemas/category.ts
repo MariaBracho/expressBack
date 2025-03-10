@@ -1,25 +1,28 @@
-import Joi from 'joi';
+import * as yup from 'yup';
 
-const id = Joi.number().min(1);
-const name = Joi.string().min(3).max(30);
+const id = yup.number().min(1);
+const name = yup.string().min(3).max(30);
 
-const getCategorySchema = Joi.object({
+const getCategorySchema = yup.object({
   id: id.required(),
 });
 
-const createCategorySchema = Joi.object({
+const createCategorySchema = yup.object({
   name: name.required(),
-  description: Joi.string(),
+  description: yup.string(),
 });
 
-const updateCategorySchema = Joi.object({
+const updateCategorySchema = yup.object({
   name,
-  description: Joi.string(),
+  description: yup.string(),
 });
 
-const deleteCategorySchema = Joi.object({
+const deleteCategorySchema = yup.object({
   id: id.required(),
 });
+
+export type CreateCategory = yup.InferType<typeof createCategorySchema>;
+export type UpdateCategory = yup.InferType<typeof updateCategorySchema>;
 
 export {
   deleteCategorySchema,

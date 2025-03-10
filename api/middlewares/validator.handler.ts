@@ -1,12 +1,12 @@
 import { badRequest } from '@hapi/boom';
-
-// function with clousure to validate the request body
+import type { NextFunction, Request, Response } from 'express';
+import type { AnyObject } from 'yup';
 
 export default function validatorHandler(
-  schema: any,
-  property: 'body' | 'params' | 'query'
+  schema: AnyObject,
+  property: keyof Request
 ) {
-  return (req: any, res: any, next: any) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req[property], { abortEarly: false });
 
     if (error) {

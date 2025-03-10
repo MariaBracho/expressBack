@@ -1,7 +1,10 @@
 import { notFound, conflict } from '@hapi/boom';
-import type { Customer } from '../types/customer';
+import sequelize from '@/libs/sequelize';
+import type { Customer } from '@/types/customer';
+import type { CreateCustomer, UpdateCustomer } from '@/schemas/customers';
+import { Model } from 'sequelize';
 
-import sequelize from './../libs/sequelize';
+type CustomerModel = Model & Customer;
 
 class CustomerService {
   customer: Customer[] = [];
@@ -11,44 +14,38 @@ class CustomerService {
   }
 
   async getAll() {
-    const result = await sequelize.models.Customer.findAll();
-    return result;
+    return await sequelize.models.Customer.findAll();
   }
 
   async find(id: number) {
-    const product: any = await sequelize.models.Customer.findByPk(id);
-    if (!product) {
+    const customer = (await sequelize.models.Customer.findByPk(
+      id
+    )) as CustomerModel;
+    if (!customer) {
       throw notFound('Customer not found');
     }
-    if (product.isblocked) {
+    if (customer.isblocked) {
       throw conflict('Customer is blocked');
     }
-    return product;
+    return customer;
   }
 
-  async create(body: any) {
-    const product = await sequelize.models.Customer.create(body);
-    return product;
+  async create(body: CreateCustomer) {
+    return await sequelize.models.Customer.create(body);
   }
 
-  async update(id: number, body: Customer) {
+  async update(id: number, body: UpdateCustomer) {
     const customer = await this.find(id);
-    const result = await customer.update(body, {
+    return await customer.update(body, {
       where: {
         id,
       },
     });
-
-    return result;
   }
 
   async delete(id: number) {
     const customer = await this.find(id);
-    await customer.destroy({
-      where: {
-        id,
-      },
-    });
+    await customer.destroy();
     return customer;
   }
 }

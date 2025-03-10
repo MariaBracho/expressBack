@@ -1,6 +1,5 @@
-import { Model, DataTypes, type Sequelize } from 'sequelize';
-
-import { USER_TABLE } from '../models/users.model';
+import { Model, DataTypes, type Sequelize, type ModelStatic } from 'sequelize';
+import { USER_TABLE } from '@/db/models/users.model';
 
 const CUSTOMER_TABLE = 'customers';
 
@@ -44,7 +43,7 @@ const CustomerSchema = {
 };
 
 class Customers extends Model {
-  static associate(models: any) {
+  static associate(models: { [key: string]: ModelStatic<Model> }) {
     this.belongsTo(models.User, {
       as: 'user',
     });

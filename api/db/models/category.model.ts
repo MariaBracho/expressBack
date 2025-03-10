@@ -1,4 +1,4 @@
-import { Model, DataTypes, type Sequelize } from 'sequelize';
+import { Model, DataTypes, type Sequelize, type ModelStatic } from 'sequelize';
 
 const CATEGORIES_TABLE = 'categories';
 
@@ -26,7 +26,7 @@ const CategorySchema = {
 };
 
 class Category extends Model {
-  static associate(models: any) {
+  static associate(models: { [key: string]: ModelStatic<Model> }) {
     this.hasMany(models.Product, {
       as: 'product',
       foreignKey: 'categoryId',

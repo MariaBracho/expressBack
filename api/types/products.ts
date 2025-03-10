@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   price: string;
   image: string;
-  isblocked: boolean;
+  isblocked?: boolean;
   createdAt?: Date;
   categoryId: number;
 }

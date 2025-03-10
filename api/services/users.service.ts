@@ -1,7 +1,10 @@
 import { notFound, conflict } from '@hapi/boom';
-import { type User } from './../types/users';
+import sequelize from '@/libs/sequelize';
+import type { User } from '@/types/users';
+import type { CreateUser, UpdateUser } from '@/schemas/users';
+import { Model } from 'sequelize';
 
-import sequelize from './../libs/sequelize';
+type UserModel = Model & User;
 
 class UserService {
   user: User[] = [];
@@ -11,22 +14,23 @@ class UserService {
   }
 
   async getAll() {
-    const result = await sequelize.models.User.findAll();
-    return result;
+    return await sequelize.models.User.findAll();
   }
 
   async find(id: number) {
-    const User: any = await sequelize.models.User.findByPk(id);
-    if (!User) {
+    const user = (await sequelize.models.User.findByPk(id)) as UserModel;
+
+    if (!user) {
       throw notFound('User not found');
     }
-    if (User.isblocked) {
+
+    if (user.isblocked) {
       throw conflict('User is blocked');
     }
-    return User;
+    return user;
   }
 
-  async create(body: any) {
+  async create(body: CreateUser) {
     const findUSer = await sequelize.models.User.findOne({
       where: {
         email: body.email,
@@ -35,28 +39,21 @@ class UserService {
     if (findUSer) {
       throw conflict('email already exist');
     }
-    const User = await sequelize.models.User.create(body);
-    return User;
+    return await sequelize.models.User.create(body);
   }
 
-  async update(id: number, body: User) {
+  async update(id: number, body: UpdateUser) {
     const User = await this.find(id);
-    const result = await User.update(body, {
+    return await User.update(body, {
       where: {
         id,
       },
     });
-
-    return result;
   }
 
   async delete(id: number) {
-    const User = await this.find(id);
-    await User.destroy({
-      where: {
-        id,
-      },
-    });
+    const User = (await this.find(id)) as UserModel;
+    await User.destroy();
     return User;
   }
 }

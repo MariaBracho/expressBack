@@ -1,6 +1,7 @@
 import { notFound } from '@hapi/boom';
-import type { Category } from '../types/category';
-import sequelize from './../libs/sequelize';
+import sequelize from '@/libs/sequelize';
+import type { Category } from '@/types/category';
+import type { CreateCategory, UpdateCategory } from '@/schemas/category';
 
 class CategoryService {
   category: Category[] = [];
@@ -18,19 +19,19 @@ class CategoryService {
   }
 
   async find(id: number) {
-    const category: any = await sequelize.models.Category.findByPk(id);
+    const category = await sequelize.models.Category.findByPk(id);
     if (!category) {
       throw notFound('category not found');
     }
     return category;
   }
 
-  async create(body: any) {
+  async create(body: CreateCategory) {
     const category = await sequelize.models.Category.create(body);
     return category;
   }
 
-  async update(id: number, body: Category) {
+  async update(id: number, body: UpdateCategory) {
     const category = await this.find(id);
     const result = await category.update(body, {
       where: {
@@ -43,11 +44,7 @@ class CategoryService {
 
   async delete(id: number) {
     const category = await this.find(id);
-    await category.destroy({
-      where: {
-        id,
-      },
-    });
+    await category.destroy();
     return category;
   }
 }

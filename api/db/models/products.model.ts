@@ -1,4 +1,4 @@
-import { Model, DataTypes, type Sequelize } from 'sequelize';
+import { Model, DataTypes, type Sequelize, ModelStatic } from 'sequelize';
 import { CATEGORIES_TABLE } from './category.model';
 
 const PRODUCT_TABLE = 'products';
@@ -46,7 +46,7 @@ const ProductSchema = {
 };
 
 class Product extends Model {
-  static associate(models: any) {
+  static associate(models: { [key: string]: ModelStatic<Model> }) {
     this.belongsTo(models.Category, {
       as: 'category',
     });

@@ -1,19 +1,15 @@
 import { Router } from 'express';
-import validationHandler from '../middlewares/validator.handler';
-import CategoryService from '../services/category.service';
+import validationHandler from '@/middlewares/validator.handler';
+import CategoryService from '@/services/category.service';
 import {
   createCategorySchema,
   deleteCategorySchema,
   getCategorySchema,
   updateCategorySchema,
-} from '../schemas/category';
+} from '@/schemas/category';
 
 const router = Router();
-const service = new CategoryService();
-// get all categorys
-// first params static then dynamic
-
-// Si te preguntas cuántas funciones middleware puedes enviar como callback, la respuesta es: las que quieras. Esto siempre y cuando las separes con coma. Las puedes llamar si las definiste fuera, ejecutar o incluso llamar un array de funciones middlewares.
+const categoryService = new CategoryService();
 
 router.get(
   '/:id',
@@ -22,7 +18,7 @@ router.get(
     try {
       const { id } = req.params;
 
-      const category = await service.find(Number(id));
+      const category = await categoryService.find(Number(id));
       res.status(200).json(category);
     } catch (error) {
       next(error);
@@ -31,11 +27,10 @@ router.get(
 );
 
 router.get('/', async (req, res) => {
-  const categoryList = await service.getAll();
+  const categoryList = await categoryService.getAll();
   res.status(200).json(categoryList);
 });
 
-// create category
 router.post(
   '/',
   validationHandler(createCategorySchema, 'body'),
@@ -44,7 +39,7 @@ router.post(
       const { body } = req;
       res.status(201).json({
         message: 'category created successfully',
-        data: await service.create(body),
+        data: await categoryService.create(body),
       });
     } catch (error) {
       next(error);
@@ -52,7 +47,6 @@ router.post(
   }
 );
 
-// edit category
 router.patch(
   '/:id',
   validationHandler(getCategorySchema, 'params'),
@@ -61,13 +55,13 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const category = await service.update(Number(id), body);
+      const category = await categoryService.update(Number(id), body);
       res.json({
         message: 'category updated successfully',
         data: category,
         id,
       });
-    } catch (error: any) {
+    } catch (error) {
       res.status(404).json({
         message: error.message,
       });
@@ -75,14 +69,13 @@ router.patch(
   }
 );
 
-// delete category
 router.delete(
   '/:id',
   validationHandler(deleteCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const message = await service.delete(Number(id));
+      const message = await categoryService.delete(Number(id));
       res.json({
         message: 'category deleted successfully',
         data: message,

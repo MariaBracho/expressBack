@@ -1,29 +1,29 @@
-import Joi from 'joi';
+import * as yup from 'yup';
 
-const id = Joi.number().min(1);
-const name = Joi.string().min(3).max(30);
-const price = Joi.number().min(5);
-const image = Joi.string().uri();
-const isblocked = Joi.boolean();
-const createdAt = Joi.date();
-const categoryId = Joi.number().min(1);
+const id = yup.number().min(1);
+const name = yup.string().min(3).max(30);
+const price = yup.number().min(5);
+const image = yup.string().url();
+const isblocked = yup.boolean();
+const createdAt = yup.date();
+const categoryId = yup.number().min(1);
 
-const getProductsSchema = Joi.object({
+const getProductsSchema = yup.object({
   id: id.required(),
 });
 
-const getQueryProductsSchema = Joi.object({
-  limit: Joi.number().min(1),
-  offset: Joi.number().min(0),
+const getQueryProductsSchema = yup.object({
+  limit: yup.number().min(1),
+  offset: yup.number().min(0),
   price,
-  price_max: Joi.number(),
-  price_min: Joi.number().when('price_max', {
-    is: Joi.exist(),
-    then: Joi.number().required(),
+  price_max: yup.number(),
+  price_min: yup.number().when('price_max', {
+    is: (price_max: number) => Boolean(price_max),
+    then: (schema) => schema.required(),
   }),
 });
 
-const createProductSchema = Joi.object({
+const createProductSchema = yup.object({
   name: name.required(),
   price: price.required(),
   image,
@@ -31,7 +31,7 @@ const createProductSchema = Joi.object({
   categoryId,
 });
 
-const updateProductSchema = Joi.object({
+const updateProductSchema = yup.object({
   name,
   price,
   image,
@@ -40,9 +40,13 @@ const updateProductSchema = Joi.object({
   categoryId,
 });
 
-const deleteProductSchema = Joi.object({
+const deleteProductSchema = yup.object({
   id: id.required(),
 });
+
+export type CreateProduct = yup.InferType<typeof createProductSchema>;
+export type UpdateProduct = yup.InferType<typeof updateProductSchema>;
+export type GetProducts = yup.InferType<typeof getQueryProductsSchema>;
 
 export {
   deleteProductSchema,

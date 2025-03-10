@@ -1,7 +1,7 @@
 import { notFound } from '@hapi/boom';
-import type { Customer } from '../types/customer';
-
-import sequelize from './../libs/sequelize';
+import sequelize from '@/libs/sequelize';
+import type { Customer } from '@/types/customer';
+import type { AddItems, CreateOrder, UpdateOrder } from '@/schemas/order';
 
 class OrderService {
   order: Customer[] = [];
@@ -24,7 +24,7 @@ class OrderService {
   }
 
   async find(id: number) {
-    const oreder: any = await sequelize.models.Order.findByPk(id, {
+    const oreder = await sequelize.models.Order.findByPk(id, {
       include: [
         {
           association: 'customer',
@@ -39,20 +39,20 @@ class OrderService {
     return oreder;
   }
 
-  async create(body: any) {
+  async create(body: CreateOrder) {
     const order = await sequelize.models.Order.create(body, {
       include: ['customer'],
     });
     return order;
   }
 
-  async addItem(data: any) {
-    await this.find(data.orderId);
+  async addItem(data: AddItems) {
+    await this.find(Number(data?.orderId));
     const newItem = await sequelize.models.OrderProduct.create(data);
     return newItem;
   }
 
-  async update(id: number, body: Customer) {
+  async update(id: number, body: UpdateOrder) {
     const order = await this.find(id);
     const result = await order.update(body, {
       where: {
@@ -65,11 +65,8 @@ class OrderService {
 
   async delete(id: number) {
     const order = await this.find(id);
-    await order.destroy({
-      where: {
-        id,
-      },
-    });
+    await order.destroy();
+
     return order;
   }
 }

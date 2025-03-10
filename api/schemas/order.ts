@@ -1,29 +1,34 @@
-import Joi from 'joi';
+import * as yup from 'yup';
 
-const id = Joi.number().min(1);
+const id = yup.number().min(1);
 
-const getOrderSchema = Joi.object({
+const getOrderSchema = yup.object({
   id: id.required(),
 });
 
-const createOrderSchema = Joi.object({
+const createOrderSchema = yup.object({
   customerId: id.required(),
 });
 
-const orderId = Joi.string().required();
+const orderId = yup.string().required();
 
-const addItemsSchema = Joi.object({
+const addItemsSchema = yup.object({
   productId: id.required(),
-  amout: Joi.number().min(1).required(),
+  amout: yup.number().min(1).required(),
+  orderId,
 });
 
-const updateOrderSchema = Joi.object({
+const updateOrderSchema = yup.object({
   customerId: id,
 });
 
-const deleteOrderSchema = Joi.object({
+const deleteOrderSchema = yup.object({
   id: id.required(),
 });
+
+export type AddItems = yup.InferType<typeof addItemsSchema>;
+export type CreateOrder = yup.InferType<typeof createOrderSchema>;
+export type UpdateOrder = yup.InferType<typeof updateOrderSchema>;
 
 export {
   deleteOrderSchema,

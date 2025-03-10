@@ -1,9 +1,9 @@
-import { Model, DataTypes, type Sequelize } from 'sequelize';
+import { Model, DataTypes, type Sequelize, type ModelStatic } from 'sequelize';
 
 const USER_TABLE = 'users';
 
 class User extends Model {
-  static associate(models: any) {
+  static associate(models: { [key: string]: ModelStatic<Model> }) {
     this.hasOne(models.Customer, {
       as: 'customer',
       foreignKey: 'user_id',

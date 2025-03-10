@@ -12,17 +12,17 @@
     "strictNullChecks": true,
     "alwaysStrict": true,
     "paths": {
-      "@/*": ["*"]
-    }
+      "@/*": ["api/*"],
+    },
   },
   "include": [
     "api/**/*.ts",
     "api/**/*.js",
     ".eslintrc.js",
-    "api/db/config.ts",
-    "api/db/models/users.model.ts",
-    "api/db/models/products.model.ts",
-    "api/db/config.js",
-    "build",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+
   ]
 }

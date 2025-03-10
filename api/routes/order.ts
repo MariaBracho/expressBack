@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import validationHandler from '../middlewares/validator.handler';
+import validationHandler from '@/middlewares/validator.handler';
 import {
   addItemsSchema,
   createOrderSchema,
   deleteOrderSchema,
   getOrderSchema,
   updateOrderSchema,
-} from '../schemas/order';
-import OrderService from '../services/order.service';
+} from '@/schemas/order';
+import OrderService from '@/services/order.service';
 
 const router = Router();
-const service = new OrderService();
+const orderService = new OrderService();
 
 router.get(
   '/:id',
@@ -19,7 +19,7 @@ router.get(
     try {
       const { id } = req.params;
 
-      const product = await service.find(Number(id));
+      const product = await orderService.find(Number(id));
       res.status(200).json(product);
     } catch (error) {
       next(error);
@@ -28,11 +28,10 @@ router.get(
 );
 
 router.get('/', async (req, res) => {
-  const productsList = await service.getAll();
+  const productsList = await orderService.getAll();
   res.status(200).json(productsList);
 });
 
-// create product
 router.post(
   '/',
   validationHandler(createOrderSchema, 'body'),
@@ -41,7 +40,7 @@ router.post(
       const { body } = req;
       res.status(201).json({
         message: 'Order created successfully',
-        data: await service.create(body),
+        data: await orderService.create(body),
       });
     } catch (error) {
       next(error);
@@ -60,7 +59,7 @@ router.post(
 
       res.status(201).json({
         message: 'Order added successfully',
-        data: await service.addItem({ ...body, orderId: params.id }),
+        data: await orderService.addItem({ ...body, orderId: params.id }),
       });
     } catch (error) {
       next(error);
@@ -68,7 +67,6 @@ router.post(
   }
 );
 
-// edit product
 router.patch(
   '/:id',
   validationHandler(getOrderSchema, 'params'),
@@ -77,13 +75,13 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const product = await service.update(Number(id), body);
+      const product = await orderService.update(Number(id), body);
       res.json({
         message: 'Order updated successfully',
         data: product,
         id,
       });
-    } catch (error: any) {
+    } catch (error) {
       res.status(404).json({
         message: error.message,
       });
@@ -91,14 +89,13 @@ router.patch(
   }
 );
 
-// delete product
 router.delete(
   '/:id',
   validationHandler(deleteOrderSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const message = await service.delete(Number(id));
+      const message = await orderService.delete(Number(id));
       res.json({
         message: 'Order deleted successfully',
         data: message,

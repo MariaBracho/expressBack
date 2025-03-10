@@ -1,4 +1,4 @@
-import { Model, DataTypes, type Sequelize } from 'sequelize';
+import { Model, DataTypes, type Sequelize, type ModelStatic } from 'sequelize';
 import { CUSTOMER_TABLE } from './customers.model';
 
 const ORDER_TABLE = 'orders';
@@ -35,15 +35,15 @@ const OrderSchema = {
         const order = this as any;
 
         if (order.items?.length > 0) {
-          return order.reduce(
+          return order.items.reduce(
             (
               total: number,
               item: {
                 price: number;
-                OrderProduct: { amout: number };
+                OrderProduct: { amount: number };
               }
             ) => {
-              return total + item.price * item.OrderProduct.amout;
+              return total + item.price * item.OrderProduct.amount;
             },
             0
           );
@@ -59,9 +59,10 @@ const OrderSchema = {
 class Order extends Model {
   items?: Array<{
     price: number;
-    OrderProduct: { amout: number };
+    OrderProduct: { amount: number };
   }>;
-  static associate(models: any) {
+
+  static associate(models: { [key: string]: ModelStatic<Model> }) {
     this.belongsTo(models.Customer, {
       as: 'customer',
     });

@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && ts-node api/index.ts",
-    "dev": "tsc && ts-node api/index.ts",
+    "start": "tsc && nodemon api/index.ts",
+    "dev": "tsc && nodemon api/index.ts",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --fix",
     "build": "tsc",
@@ -61,6 +61,21 @@
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.6.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "yup": "^1.6.1"
+  },
+  "nodemonConfig": {
+    "ignore":
+      [
+        "**/*.spec.ts",
+        ".git",
+        "node_modules"
+      ],
+    "watch": [
+        "api"
+            ],
+    "exec": "node -r tsconfig-paths/register -r ts-node/register api/index.ts",
+    "ext": "ts, js"
   }
 }

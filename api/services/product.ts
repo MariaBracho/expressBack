@@ -1,8 +1,16 @@
+import { FindOptions, Model, Op } from 'sequelize';
 import { notFound, conflict } from '@hapi/boom';
-import type { Product } from '../types/products';
-import { Op } from 'sequelize';
+import sequelize from '@/libs/sequelize';
+import type { Product } from '@/types/products';
 
-import sequelize from './../libs/sequelize';
+interface ProductModel extends Model {
+  isblocked: boolean;
+}
+import type {
+  CreateProduct,
+  GetProducts,
+  UpdateProduct,
+} from '@/schemas/products';
 
 class ProductService {
   product: Product[] = [];
@@ -11,15 +19,9 @@ class ProductService {
     this.product = [];
   }
 
-  async getAll(query: any) {
-    const options: {
-      limit?: number;
-      offset?: number;
-      include: string[];
-      price?: number;
-      price_max?: number;
-      price_min?: number;
-      where: Record<string, any>;
+  async getAll(query: GetProducts) {
+    const options: FindOptions & {
+      where: Record<string, number | string>;
     } = {
       include: ['category'],
       where: {},
@@ -53,22 +55,24 @@ class ProductService {
   }
 
   async find(id: number) {
-    const product: any = await sequelize.models.Product.findByPk(id);
+    const product = (await sequelize.models.Product.findByPk(
+      id
+    )) as ProductModel;
+
     if (!product) {
       throw notFound('Product not found');
     }
-    if (product.isblocked) {
+    if (product?.isblocked) {
       throw conflict('Product is blocked');
     }
     return product;
   }
 
-  async create(body: any) {
-    const product = await sequelize.models.Product.create(body);
-    return product;
+  async create(body: CreateProduct) {
+    return await sequelize.models.Product.create(body);
   }
 
-  async update(id: number, body: Product) {
+  async update(id: number, body: UpdateProduct) {
     const product = await this.find(id);
     const result = await product.update(body, {
       where: {
@@ -80,12 +84,8 @@ class ProductService {
   }
 
   async delete(id: number) {
-    const product = await this.find(id);
-    await product.destroy({
-      where: {
-        id,
-      },
-    });
+    const product = (await this.find(id)) as ProductModel;
+    await product.destroy();
     return product;
   }
 }

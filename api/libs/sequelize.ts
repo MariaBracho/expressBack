@@ -1,31 +1,28 @@
 import { Sequelize, Options as SequelizeOptions } from 'sequelize';
-import config from '../config/config';
-import { setupModels } from '../db/models/index';
+import config from '@/config/config';
+import { setupModels } from '@/db/models/index';
 
-// const USER = encodeURIComponent(config.dbUser ?? '');
-// const PASSWORD = encodeURIComponent(config.dbPassword ?? '');
-// const DB_HOST = config.dbHost ?? '';
-// const DB_NAME = config.dbName ?? '';
-// const DB_PORT = config.dbPort ?? '';
-
-// const URI = `postgres://${USER}:${PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+const { isProd, dbEngine, dbUrl, developmentUri } = config;
 
 const options: SequelizeOptions = {
-  dialect: config.dbEngine as SequelizeOptions['dialect'],
-  logging: config.isProd ? false : console.log,
+  dialect: dbEngine as SequelizeOptions['dialect'],
+  logging: isProd ? false : console.log,
 };
 
-if (config.isProd) {
+if (isProd) {
   options.dialectModule = require('pg');
 }
 
-console.log({ isProd: config.isProd, env: process.env.NODE_ENV });
+const url = isProd ? dbUrl : developmentUri;
 
-const sequelize = new Sequelize(config.dbUrl, options);
+const sequelize = new Sequelize(url, options);
+
+console.log({ developmentUri });
 
 setupModels(sequelize);
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-sequelize.sync();
+if (!isProd) {
+  sequelize.sync();
+}
 
 export default sequelize;
